@@ -14,13 +14,13 @@ datasource db {
 }
 
 model Restaurant {
-  id           String     @id @default(uuid())
-  name         String
-  imageUrl     String
-  deliveryFee  Decimal    @db.Decimal(10, 2)
-  deliveryTime Int
-  categories   Category[]
-  products     Product[]
+  id                  String     @id @default(uuid())
+  name                String
+  imageUrl            String
+  deliveryFee         Decimal    @db.Decimal(10, 2)
+  deliveryTimeMinutes Int
+  categories          Category[]
+  products            Product[]
 }
 
 model Category {
@@ -28,7 +28,7 @@ model Category {
   name        String
   imageUrl    String
   restaurants Restaurant[]
-  products     Product[]
+  products    Product[]
 }
 
 model Product {
