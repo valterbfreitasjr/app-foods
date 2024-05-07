@@ -114,7 +114,7 @@ ATENÇÃO PARA ADD Imagens:
     -:  rm -rf .next   <- irá garantir a exclusão da pasta.
 
 
-
+1:17
 
 
     
