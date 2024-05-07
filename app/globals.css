@@ -54,6 +54,6 @@
   }
 
   body {
-    @apply text-foreground antialiased;
+    @apply bg-[#F4F4F5] text-foreground antialiased;
   }
 }
