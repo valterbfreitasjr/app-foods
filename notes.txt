@@ -109,7 +109,9 @@ ATENÇÃO PARA ADD Imagens:
             remotePatterns: [{ hostname: "utfs.io" }],
         },
 
----
+
+** LIMPAR o cache do 'Next', podemos utilizar o seguinte comando:
+    -:  rm -rf .next   <- irá garantir a exclusão da pasta.
 
 
 
