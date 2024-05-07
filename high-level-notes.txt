@@ -1,0 +1,9 @@
+- NextJS: Server Side Rendering, melhoria no SEO e desempenho para o usuário, aliviando a carga de renderização por parte do client.
+
+- Prisma (ORM): Utilizado na criação das tabelas do nosso banco de dados, no caso utilizando o Postgres.
+
+- Libs:
+    . TailwindCSS
+    . Shadcn UI
+
+- Commits: Baseados nas regras do 'Convetional Commits'

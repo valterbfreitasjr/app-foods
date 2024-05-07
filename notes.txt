@@ -1,0 +1,126 @@
+Sobre o Next Js - Em 'App' toda pasta que você criar dentro, por exemplo:
+    - pasta 'about' (dentro) >> page.tsx , ai ir na URL:3000/about, você abrirá essa page.
+
+    - O arquivo 'layout.tsx' envolve toda a aplicação, caso altere e passe o {children} irá renderizar em todas as pages.
+
+    - IMPORTANTE: Por padrão todos os componentes do Next são 'Server Components' são renderizados do lado do servidor,
+                  significa que não podemos utilizar um 'useState', quando queremos interatividade precisamos utilizar
+                  o "use client", 'Server Components' são utilizados quando não queremos interatividade, basta criar um
+                  componente normalmente, já os 'Clients Components' precisam do 'use client'.
+
+Sobre o Prisma (ORM)
+        Istalar: npm install prisma --save-dev
+        Run: npx prisma init --datasource-provider postgresql
+        cmds:
+        npx prisma format --- Irá formatar os Schemas
+        npx prisma migrate dev --name init_database
+
+        ** Caso utilize Docker, NÃO ESQUECER de colocar no '.env':
+            -   # docker
+                .postgres-data
+
+        Sobre os 'seeds' com o prisma: - Colocar a seguinte configuração no package.json
+        "prisma": {
+        "seed": "ts-node ./prisma/seed.ts"
+        },
+
+      ** Necessário instalar o ts-node, através do comando: npx install -d ts-node
+
+Sobre o Shadcn-UI
+     - Lib com components prontos
+        - Instalar: npx shadcn-ui@latest init - Default/Slate/Yes (css variables)
+
+    :: Irá criar uma pasta chamada 'lib' > utils.ts
+    . Para utilizar o componente basta instalar 
+        >> npx shadcn-ui@latest add card -- então irá para a pasta 'components'
+
+        Para alterar no arquivo: components.json
+            "components": "@/app/_components",
+            "utils": "@/app/_lib/utils"
+
+        DICA: interessante colocar '_' nas pastas que não são rotas.
+
+DICA para organização:
+    - Tailwind Automatic Class Sorting
+
+        Cmd: npm install -D prettier prettier-plugin-tailwindcss
+
+        - Criar o arquivo ".prettierrc" e inserir o código:
+
+            {
+            "plugins": ["prettier-plugin-tailwindcss"]
+            }
+
+Sobre Git-Hooks - Para garantir a padronização do projeto
+    - Irá garantir que antes de realizar o commit, seja executado o Prettier e o EsLint,
+    garantindo uma padronização do projeto.
+
+        Iremos utilizar o Husky, que irá garatir a execução do código para verificação.
+            - cmd: npm install -D husky lint-staged
+            - npx husky init   --> irá criar uma pasta chamada 'husky' onde haverá o 'pre-commit',
+                                   iremos informar o script no 'pre-commit'.
+                ** Iremos modificar o conteúdo do arquivo do 'pre-commit' para:
+                    - npx lint-staged   --> irá garantir que o eslint leia somente os arquivos que foram modificados.
+            
+            - Iremos criar um arquivo chamado:
+                ** .lintstagedrc.json
+
+            ** E então, adicionar o seguinte código:
+
+                {
+                    //Para todos os arquivos '.ts ou tsx', executar os comandos: eslint e prettier
+                    "*.ts?(x)": ["eslint --fix", "prettier --write"]
+                }
+
+            :: Esse código garante que antes de realizar o commit será executado esses commandos.
+
+Sobre o Git Hooks - Para garantir a padronização das mensagens de commit no projeto, baseados no 'Conventional Commit'
+    - https://conventionalcommits.org
+
+    - Iremos utilizar o 'git commit msg linter', uma lib que irá garantir a padronização das mensagens,
+    no caso avisando quando não estiver no padrão.
+
+    - Instalação: npm i git-commit-msg-linter
+
+    ** OBS: Para podermos utilizar com o Husky, precisamos rodar esse comando:
+
+        -- npx husky add .husky/commit-msg ".git/hooks/commit-msg \$1"
+
+        ** Caso dê a mensagem de 'deprecated'
+
+        Podemos criar um arquivo dentro da pasta do 'husky', junto a 'pre_commit' com o nome 'commit-msg'.
+
+
+Sobre 'Server Components':
+    - Ao criarmos um server component, podemos chamar diretamente nosso ORM para podermos realizar
+    querys na database, não sendo necessário uma rota de API, visto que o componente será renderizado
+    no lado do servidor.
+
+    ** Na árvore de pastas em APP > _lib , então irá criar o arquivo 'prisma.ts':
+        :: Esse arquivo irá garantir que em desenvolvimento ao atualizarmos sempre é criado uma instância do prisma client,
+        esse arquivo irá garantir que seja uma instância do 'prismaClient'.
+
+    ** Só podemos utilizar 'async/await' em 'Server Components', não sendo possível em 'Client Components'.
+
+ATENÇÃO PARA ADD Imagens:
+    - Temos que inserir o seguite código no arquivo 'next.config.mjs':
+
+        images: {
+            remotePatterns: [{ hostname: "utfs.io" }],
+        },
+
+---
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
