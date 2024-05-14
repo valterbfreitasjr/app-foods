@@ -1,8 +1,13 @@
 import { db } from "@/app/_lib/prisma";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { Button } from "@/app/_components/ui/button";
-import { ChevronLeft, ChevronLeftIcon } from "lucide-react";
+import {
+  calculateProductTotalPrice,
+  formatCurrency,
+} from "@/app/_helpers/price";
+import ProductImage from "./_components/product-image";
+import DiscountBadge from "@/app/_components/discount-badge";
+import ProductDetails from "./_components/product-details";
 
 interface ProductPageProps {
   params: {
@@ -29,26 +34,13 @@ const ProductPage = async ({ params: { id } }: ProductPageProps) => {
   return (
     <div>
       {/* Image */}
-      <div className="relative h-[360px] w-full">
-        <Image
-          src={product.imageUrl}
-          alt={product.name}
-          fill
-          className="object-cover"
-        />
+      <ProductImage product={product} />
 
-        <Button
-          className="absolute left-4 top-4 h-10 w-10 rounded-full bg-white text-foreground hover:text-white"
-          size="icon"
-        >
-          <ChevronLeftIcon />
-        </Button>
-      </div>
-
-      {/* Title and Price - 30min */}
-      <div></div>
+      <ProductDetails product={product} />
     </div>
   );
 };
+
+// 50min
 
 export default ProductPage;
