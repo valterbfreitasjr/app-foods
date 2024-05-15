@@ -3,7 +3,6 @@
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { formatPrice } from "../_helpers/price";
-import { ArrowDownIcon } from "lucide-react";
 import Link from "next/link";
 import DiscountBadge from "./discount-badge";
 
