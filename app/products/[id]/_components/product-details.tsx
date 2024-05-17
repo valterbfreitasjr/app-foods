@@ -49,7 +49,7 @@ const ProductDetails = ({
 
   return (
     <div className="relative z-50 rounded-t-3xl bg-white py-5">
-      {/* Restaurant */}
+      {/* Restaurant Image */}
       <div className="flex items-center gap-[0.375rem] px-5">
         <div className="relative h-6 w-6">
           <Image

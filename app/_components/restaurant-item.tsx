@@ -15,7 +15,7 @@ const RestaurantItem = ({ restaurant }: RestaurantItemProps) => {
       className="w-[150px] min-w-[150px]"
       href={`/restaurants/${restaurant.id}`}
     >
-      <div className="max-w-[266px]: min-w-[266px] space-y-2">
+      <div className="w-full space-y-3">
         <div className="relative h-[136px] w-full">
           <Image
             src={restaurant.imageUrl}
@@ -24,7 +24,7 @@ const RestaurantItem = ({ restaurant }: RestaurantItemProps) => {
             className="rounded-lg object-cover"
           />
 
-          <div className="absolute left-2 top-2 flex items-center rounded-full bg-primary bg-white px-2 py-[2px] text-xs">
+          <div className="absolute left-2 top-2 flex items-center rounded-full bg-white px-2 py-[2px] text-xs">
             <StarIcon size={12} className="fill-yellow-400 text-yellow-500" />
             <span className="text-xs font-semibold">5.0</span>
           </div>
