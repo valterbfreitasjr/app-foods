@@ -24,6 +24,8 @@ Sobre o Prisma (ORM)
         "seed": "ts-node ./prisma/seed.ts"
         },
 
+        ** CMD: npx prisma db seed       <<<<
+
       ** Necessário instalar o ts-node, através do comando: npx install -d ts-node
 
 Sobre o Shadcn-UI
@@ -114,7 +116,6 @@ ATENÇÃO PARA ADD Imagens:
     -:  rm -rf .next   <- irá garantir a exclusão da pasta.
 
 
-1:17
 
 
     
