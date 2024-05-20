@@ -1,5 +1,6 @@
 "use client";
 
+import DeliveryInfo from "@/app/_components/delivery-info";
 import DiscountBadge from "@/app/_components/discount-badge";
 import ProductList from "@/app/_components/product-list";
 import { Button } from "@/app/_components/ui/button";
@@ -48,7 +49,8 @@ const ProductDetails = ({
     });
 
   return (
-    <div className="relative z-50 rounded-t-3xl bg-white py-5">
+    // "mt-[-1.5rem] flex items-center justify-between   pt-5"
+    <div className="relative z-50 mt-[-1.5rem] rounded-t-3xl bg-white py-5">
       {/* Restaurant Image */}
       <div className="flex items-center gap-[0.375rem] px-5">
         <div className="relative h-6 w-6">
@@ -107,37 +109,7 @@ const ProductDetails = ({
       </div>
 
       {/* Delivery */}
-      <div className="px-5">
-        <Card className="mt-6 flex justify-around py-2">
-          {/* Cost */}
-          <div className="flex flex-col items-center">
-            <div className="flex items-center gap-1 text-muted-foreground">
-              <span className="text-xs text-muted-foreground">Entrega</span>
-              <BikeIcon size={14} />
-            </div>
-
-            {Number(product.restaurant.deliveryFee) > 0 ? (
-              <p className="text-xs font-semibold">
-                {formatCurrency(Number(product.restaurant.deliveryFee))}
-              </p>
-            ) : (
-              <p className="text-sm font-semibold">Grátis</p>
-            )}
-          </div>
-
-          {/* Time */}
-          <div className="flex flex-col items-center">
-            <div className="flex items-center gap-1 text-muted-foreground">
-              <span className="text-xs text-muted-foreground">Entrega</span>
-              <TimerIcon size={14} />
-            </div>
-
-            <p className="text-sm font-semibold">
-              {product.restaurant.deliveryTimeMinutes} min
-            </p>
-          </div>
-        </Card>
-      </div>
+      <DeliveryInfo restaurant={product.restaurant} />
 
       <div className="mt-6 space-y-3 px-5">
         <h3 className="text-font-semibold">Sobre</h3>
