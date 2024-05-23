@@ -116,6 +116,20 @@ ATENÇÃO PARA ADD Imagens:
     -:  rm -rf .next   <- irá garantir a exclusão da pasta.
 
 
+::: Curiosidades :::
+
+    * NEXT
+    - useSearchParams
+        _ Podemos utilizar para 'pegar' o valor de um parâmetro na url,
+          por exemplo: searchParams.get('search')
+
+          Se passarmos a url - https://localhost:8080/produtos?search=123
+
+          Iremos 'pegar' o valor do 'search' que será: 123.
+
+
+
+
 
 
     
