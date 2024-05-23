@@ -35,7 +35,7 @@ const ProductItem = ({ product, className }: ProductItemProps) => {
             className="rounded-md object-cover shadow-md"
           />
 
-          {product.discountPercentage && (
+          {Boolean(product.discountPercentage) && (
             <div className="absolute left-2 top-2 flex items-center rounded-full bg-primary px-2 py-[2px] text-white">
               <DiscountBadge product={product} />
             </div>
