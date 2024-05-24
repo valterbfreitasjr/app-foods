@@ -4,20 +4,15 @@ import DeliveryInfo from "@/app/_components/delivery-info";
 import DiscountBadge from "@/app/_components/discount-badge";
 import ProductList from "@/app/_components/product-list";
 import { Button } from "@/app/_components/ui/button";
-import { Card } from "@/app/_components/ui/card";
+import { CartContext } from "@/app/_context/cart";
 import {
   calculateProductTotalPrice,
   formatCurrency,
 } from "@/app/_helpers/price";
 import { Prisma } from "@prisma/client";
-import {
-  BikeIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  TimerIcon,
-} from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 interface ProductDetailsProps {
   product: Prisma.ProductGetPayload<{
@@ -37,6 +32,9 @@ const ProductDetails = ({
   complementaryProducts,
 }: ProductDetailsProps) => {
   const [quantity, setQuantity] = useState(1);
+  const { products, addProductToCart } = useContext(CartContext);
+
+  console.log(products);
 
   const handleClickIncreaseQuantity = () =>
     setQuantity((currentState) => currentState + 1);
@@ -47,6 +45,8 @@ const ProductDetails = ({
 
       return currentState - 1;
     });
+
+  const handleClickAddProductToCart = () => addProductToCart(product);
 
   return (
     // "mt-[-1.5rem] flex items-center justify-between   pt-5"
@@ -122,7 +122,12 @@ const ProductDetails = ({
       </div>
 
       <div className="mt-6 px-5">
-        <Button className="w-full font-semibold">Adicionar à Sacola</Button>
+        <Button
+          className="w-full font-semibold"
+          onClick={handleClickAddProductToCart}
+        >
+          Adicionar à Sacola
+        </Button>
       </div>
     </div>
   );
