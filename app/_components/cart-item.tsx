@@ -1,14 +1,26 @@
 import Image from "next/image";
-import { CartProduct } from "../_context/cart";
+import { CartContext, CartProduct } from "../_context/cart";
 import { calculateProductTotalPrice, formatCurrency } from "../_helpers/price";
 import { Button } from "./ui/button";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, TrashIcon } from "lucide-react";
+import { useContext } from "react";
 
 interface CartItemProps {
   cartProducts: CartProduct;
 }
 
 const CartItem = ({ cartProducts }: CartItemProps) => {
+  const { decreaseProductQuantity, increaseProductQuantity } =
+    useContext(CartContext);
+
+  const handleDecreaseProductQuantity = () => {
+    decreaseProductQuantity(cartProducts.id);
+  };
+
+  const handleIncreaseProductQuantity = () => {
+    increaseProductQuantity(cartProducts.id);
+  };
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -42,15 +54,31 @@ const CartItem = ({ cartProducts }: CartItemProps) => {
               variant="ghost"
               className="h-8 w-8 border border-solid border-muted-foreground"
             >
-              <ChevronLeftIcon size={18} />
+              <ChevronLeftIcon
+                size={18}
+                onClick={handleDecreaseProductQuantity}
+              />
             </Button>
-            <span className="w-2 text-sm">{cartProducts.quantity}</span>
+            <span className="w-4 text-sm font-bold">
+              {cartProducts.quantity}
+            </span>
             <Button size="icon" className="h-8 w-8">
-              <ChevronRightIcon size={18} />
+              <ChevronRightIcon
+                size={18}
+                onClick={handleIncreaseProductQuantity}
+              />
             </Button>
           </div>
         </div>
       </div>
+
+      <Button
+        size="icon"
+        variant="ghost"
+        className="h-8 w-8 border border-solid border-muted-foreground"
+      >
+        <TrashIcon size={18} />
+      </Button>
     </div>
   );
 };

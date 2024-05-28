@@ -6,11 +6,13 @@ const Cart = () => {
   const { products } = useContext(CartContext);
 
   return (
-    <>
-      {products.map((product) => (
-        <CartItem cartProducts={product} key={product.id} />
-      ))}
-    </>
+    <div className="py-4">
+      <div className="space-y-2">
+        {products.map((product) => (
+          <CartItem cartProducts={product} key={product.id} />
+        ))}
+      </div>
+    </div>
   );
 };
 
