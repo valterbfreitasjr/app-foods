@@ -1,7 +1,8 @@
 "use client";
 
 import { Product } from "@prisma/client";
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useMemo, useState } from "react";
+import { calculateProductTotalPrice } from "../_helpers/price";
 
 export interface CartProduct extends Product {
   quantity: number;
@@ -9,20 +10,44 @@ export interface CartProduct extends Product {
 
 interface ICartContext {
   products: CartProduct[];
+  subtotalPrice: number;
+  totalPrice: number;
+  totalDiscounts: number;
   addProductToCart: (product: Product, quantity: number) => void;
   decreaseProductQuantity: (productId: string) => void;
   increaseProductQuantity: (productId: string) => void;
+  removeProductFromCart: (productId: string) => void;
 }
 
 export const CartContext = createContext<ICartContext>({
   products: [],
+  subtotalPrice: 0,
+  totalPrice: 0,
+  totalDiscounts: 0,
   addProductToCart: () => {},
   decreaseProductQuantity: () => {},
   increaseProductQuantity: () => {},
+  removeProductFromCart: () => {},
 });
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProducts] = useState<CartProduct[]>([]);
+
+  const subtotalPrice = useMemo(() => {
+    return products.reduce((acc, product) => {
+      return acc + Number(product.price) * product.quantity;
+    }, 0);
+  }, [products]);
+
+  const totalPrice = useMemo(() => {
+    return products.reduce((acc, product) => {
+      return (
+        acc + Number(calculateProductTotalPrice(product)) * product.quantity
+      );
+    }, 0);
+  }, [products]);
+
+  const totalDiscounts = subtotalPrice - totalPrice;
 
   const decreaseProductQuantity = (productId: string) => {
     return setProducts((prev) =>
@@ -76,18 +101,24 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setProducts((prev) => [...prev, { ...product, quantity: quantity }]);
   };
 
+  const removeProductFromCart = (productId: string) => {
+    return setProducts((prev) => prev.filter((prod) => prod.id !== productId));
+  };
+
   return (
     <CartContext.Provider
       value={{
         products,
+        subtotalPrice,
+        totalPrice,
+        totalDiscounts,
         addProductToCart,
         decreaseProductQuantity,
         increaseProductQuantity,
+        removeProductFromCart,
       }}
     >
       {children}
     </CartContext.Provider>
   );
 };
-
-// 28-05 : 50min

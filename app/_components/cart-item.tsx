@@ -10,8 +10,14 @@ interface CartItemProps {
 }
 
 const CartItem = ({ cartProducts }: CartItemProps) => {
-  const { decreaseProductQuantity, increaseProductQuantity } =
-    useContext(CartContext);
+  const {
+    decreaseProductQuantity,
+    increaseProductQuantity,
+    removeProductFromCart,
+    subtotalPrice,
+    totalPrice,
+    totalDiscounts,
+  } = useContext(CartContext);
 
   const handleDecreaseProductQuantity = () => {
     decreaseProductQuantity(cartProducts.id);
@@ -19,6 +25,10 @@ const CartItem = ({ cartProducts }: CartItemProps) => {
 
   const handleIncreaseProductQuantity = () => {
     increaseProductQuantity(cartProducts.id);
+  };
+
+  const handleRemoveProductFromCart = () => {
+    removeProductFromCart(cartProducts.id);
   };
 
   return (
@@ -39,11 +49,16 @@ const CartItem = ({ cartProducts }: CartItemProps) => {
 
           <div className="flex items-center gap-1">
             <h4 className="text-sm font-semibold">
-              {formatCurrency(calculateProductTotalPrice(cartProducts))}
+              {formatCurrency(
+                calculateProductTotalPrice(cartProducts) *
+                  cartProducts.quantity,
+              )}
             </h4>
             {cartProducts.discountPercentage > 0 && (
               <span className="text-xs text-muted-foreground line-through">
-                {formatCurrency(Number(cartProducts.price))}
+                {formatCurrency(
+                  Number(cartProducts.price) * cartProducts.quantity,
+                )}
               </span>
             )}
           </div>
@@ -76,9 +91,16 @@ const CartItem = ({ cartProducts }: CartItemProps) => {
         size="icon"
         variant="ghost"
         className="h-8 w-8 border border-solid border-muted-foreground"
+        onClick={handleRemoveProductFromCart}
       >
         <TrashIcon size={18} />
       </Button>
+
+      <div>
+        {subtotalPrice} <br />
+        {totalPrice} <br />
+        {totalDiscounts.toFixed(2)}
+      </div>
     </div>
   );
 };
