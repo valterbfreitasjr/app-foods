@@ -11,12 +11,10 @@ interface CartItemProps {
 
 const CartItem = ({ cartProducts }: CartItemProps) => {
   const {
+    products,
     decreaseProductQuantity,
     increaseProductQuantity,
     removeProductFromCart,
-    subtotalPrice,
-    totalPrice,
-    totalDiscounts,
   } = useContext(CartContext);
 
   const handleDecreaseProductQuantity = () => {
@@ -95,12 +93,6 @@ const CartItem = ({ cartProducts }: CartItemProps) => {
       >
         <TrashIcon size={18} />
       </Button>
-
-      <div>
-        {subtotalPrice} <br />
-        {totalPrice} <br />
-        {totalDiscounts.toFixed(2)}
-      </div>
     </div>
   );
 };

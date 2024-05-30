@@ -1,10 +1,19 @@
 "use client";
 
-import { Product } from "@prisma/client";
+import { Prisma, Product } from "@prisma/client";
 import { ReactNode, createContext, useMemo, useState } from "react";
 import { calculateProductTotalPrice } from "../_helpers/price";
 
-export interface CartProduct extends Product {
+export interface CartProduct
+  extends Prisma.ProductGetPayload<{
+    include: {
+      restaurant: {
+        select: {
+          deliveryFee: true;
+        };
+      };
+    };
+  }> {
   quantity: number;
 }
 
