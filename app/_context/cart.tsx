@@ -1,6 +1,6 @@
 "use client";
 
-import { Prisma, Product } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { ReactNode, createContext, useMemo, useState } from "react";
 import { calculateProductTotalPrice } from "../_helpers/price";
 
@@ -22,7 +22,18 @@ interface ICartContext {
   subtotalPrice: number;
   totalPrice: number;
   totalDiscounts: number;
-  addProductToCart: (product: Product, quantity: number) => void;
+  addProductToCart: (
+    product: Prisma.ProductGetPayload<{
+      include: {
+        restaurant: {
+          select: {
+            deliveryFee: true;
+          };
+        };
+      };
+    }>,
+    quantity: number,
+  ) => void;
   decreaseProductQuantity: (productId: string) => void;
   increaseProductQuantity: (productId: string) => void;
   removeProductFromCart: (productId: string) => void;
@@ -42,12 +53,14 @@ export const CartContext = createContext<ICartContext>({
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProducts] = useState<CartProduct[]>([]);
 
+  // Subtotal
   const subtotalPrice = useMemo(() => {
     return products.reduce((acc, product) => {
       return acc + Number(product.price) * product.quantity;
     }, 0);
   }, [products]);
 
+  // Total
   const totalPrice = useMemo(() => {
     return products.reduce((acc, product) => {
       return (
@@ -56,6 +69,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }, 0);
   }, [products]);
 
+  // Total Discount
   const totalDiscounts = subtotalPrice - totalPrice;
 
   const decreaseProductQuantity = (productId: string) => {
@@ -87,7 +101,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  const addProductToCart = (product: Product, quantity: number) => {
+  const addProductToCart = (
+    product: Prisma.ProductGetPayload<{
+      include: {
+        restaurant: {
+          select: {
+            deliveryFee: true;
+          };
+        };
+      };
+    }>,
+    quantity: number,
+  ) => {
     const isProductOnCart = products.some(
       (cartProduct) => cartProduct.id === product.id,
     );

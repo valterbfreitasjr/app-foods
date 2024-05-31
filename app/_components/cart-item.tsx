@@ -11,7 +11,6 @@ interface CartItemProps {
 
 const CartItem = ({ cartProducts }: CartItemProps) => {
   const {
-    products,
     decreaseProductQuantity,
     increaseProductQuantity,
     removeProductFromCart,
@@ -61,23 +60,21 @@ const CartItem = ({ cartProducts }: CartItemProps) => {
             )}
           </div>
 
-          <div className="flex items-center gap-1 text-center">
+          <div className="flex items-center gap-4 text-center">
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8 border border-solid border-muted-foreground"
+              className="h-6 w-6 border border-solid border-muted-foreground"
             >
               <ChevronLeftIcon
-                size={18}
+                size={16}
                 onClick={handleDecreaseProductQuantity}
               />
             </Button>
-            <span className="w-4 text-sm font-bold">
-              {cartProducts.quantity}
-            </span>
-            <Button size="icon" className="h-8 w-8">
+            <span className="block w-3 text-xs">{cartProducts.quantity}</span>
+            <Button size="icon" className="h-6 w-6">
               <ChevronRightIcon
-                size={18}
+                size={16}
                 onClick={handleIncreaseProductQuantity}
               />
             </Button>
