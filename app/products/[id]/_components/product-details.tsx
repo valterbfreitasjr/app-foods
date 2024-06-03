@@ -4,6 +4,16 @@ import Cart from "@/app/_components/cart";
 import DeliveryInfo from "@/app/_components/delivery-info";
 import DiscountBadge from "@/app/_components/discount-badge";
 import ProductList from "@/app/_components/product-list";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/app/_components/ui/alert-dialog";
 import { Button } from "@/app/_components/ui/button";
 import { Sheet, SheetContent, SheetTitle } from "@/app/_components/ui/sheet";
 import { CartContext } from "@/app/_context/cart";
@@ -11,9 +21,10 @@ import {
   calculateProductTotalPrice,
   formatCurrency,
 } from "@/app/_helpers/price";
-import { Prisma } from "@prisma/client";
+import { Prisma, Product } from "@prisma/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
+import { emit } from "process";
 import { useContext, useState } from "react";
 
 interface ProductDetailsProps {
@@ -36,8 +47,7 @@ const ProductDetails = ({
   const [quantity, setQuantity] = useState(1);
   const { products, addProductToCart } = useContext(CartContext);
   const [isCartOpen, setIsCartOpen] = useState(false);
-
-  console.log(products);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleClickIncreaseQuantity = () =>
     setQuantity((currentState) => currentState + 1);
@@ -49,9 +59,23 @@ const ProductDetails = ({
       return currentState - 1;
     });
 
-  const handleClickAddProductToCart = () => {
-    addProductToCart(product, quantity);
+  const addToCart = ({ emptyCart }: { emptyCart?: boolean }) => {
+    addProductToCart({ product, quantity, emptyCart });
     setIsCartOpen(true);
+  };
+
+  const handleClickAddProductToCart = () => {
+    const hasDifferentRestaurantProduct = products.some(
+      (cartProduct) => cartProduct.restaurantId !== product.restaurantId,
+    );
+
+    if (hasDifferentRestaurantProduct) {
+      return setIsDialogOpen(true);
+    }
+
+    addToCart({
+      emptyCart: false,
+    });
   };
 
   return (
@@ -73,9 +97,7 @@ const ProductDetails = ({
         </div>
 
         {/* Title */}
-        <h1 className="mb-3 mt-1 px-5 text-xl font-semibold">
-          {product.restaurant.name}
-        </h1>
+        <h1 className="mb-3 mt-1 px-5 text-xl font-semibold">{product.name}</h1>
 
         {/* Price and Quantity */}
         <div className="flex justify-between px-5">
@@ -143,6 +165,31 @@ const ProductDetails = ({
           <Cart />
         </SheetContent>
       </Sheet>
+
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Há produtos de outro restaurante em sua sacola.
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Deseja esvaziar a sacola e adicionar produtos desse restaurante?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => {
+                setIsDialogOpen(false);
+              }}
+            >
+              Não
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={() => addToCart({ emptyCart: true })}>
+              Sim, esvaziar sacola e adicionar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };
