@@ -31,6 +31,13 @@ const Cart = () => {
 
                 <Separator />
 
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground ">Descontos</span>
+                  <span>- {formatCurrency(totalDiscounts)}</span>
+                </div>
+
+                <Separator />
+
                 <div className="mt-2 flex items-center justify-between text-xs">
                   <span className="text-muted-foreground ">Entrega</span>
                   {Number(products[0]?.restaurant.deliveryFee) === 0 ? (
@@ -42,13 +49,6 @@ const Cart = () => {
                       )}
                     </p>
                   )}
-                </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground ">Descontos</span>
-                  <span>- {formatCurrency(totalDiscounts)}</span>
                 </div>
 
                 <Separator />
@@ -65,7 +65,7 @@ const Cart = () => {
           <Button className="mt-6 w-full">Finalizar pedido</Button>
         </>
       ) : (
-        <h2>Não há produtos na sacola.</h2>
+        <h2 className="text-center font-medium">Não há produtos na sacola.</h2>
       )}
     </div>
   );
