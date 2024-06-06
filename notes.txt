@@ -128,6 +128,45 @@ ATENÇÃO PARA ADD Imagens:
           Iremos 'pegar' o valor do 'search' que será: 123.
 
 
+Sobre 'NextAuth.js' - Lib para autenticação.
+
+    - Install: npm install next-auth
+    - Criar na raíz app/ :
+
+        /app/api/auth/[...nextauth]/route.ts   << Da mesma forma que está escrito, [...nextauth] conhecido como 'Catch All Segments' no Next.js.
+
+    - Iremos iniciar o handler para GET e POST, então iremos informar o 'Provider' desejado
+    nesse caso o Google.
+    - É um SSO (Single Sign On) para login, podemos utilizar o GitHub, Google, Facebook, etc.
+
+        import NextAuth from "next-auth"
+
+        const handler = NextAuth({
+        ...
+        })
+
+        export { handler as GET, handler as POST }
+
+    https://next-auth.js.org/getting-started/example  -- Start config
+
+    https://next-auth.js.org/providers/google  -- Providers, serão utilizados para auth como Google, Facebook, Instagram, etc..
+
+    https://authjs.dev/getting-started/adapters/prisma  -- Adapters, para o ORM utilizado,
+    temos as tabelas utilizadas para serem executadas na migration.
+
+        ** Temos que criar um Provider do NextAuth 'cobrindo' toda a aplicação, pois por baixo dos panos é utilizado uma 'Context API' para gerenciar o usuário logado, etc...
+
+    OBS: Criamos a pasta _providers com o 'auth.tsx', esse é o Provider que irá garantir que 
+    os {childrens} acessem as informações de estado do usuário.
+        Então irei colocar no 'layout.tsx' o meu <AuthProveider/> envolvendo a aplicação toda.
+
+
+    
+
+
+
+
+
 
 
 

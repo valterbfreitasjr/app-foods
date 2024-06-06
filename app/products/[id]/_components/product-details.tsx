@@ -26,10 +26,9 @@ import {
   calculateProductTotalPrice,
   formatCurrency,
 } from "@/app/_helpers/price";
-import { Prisma, Product } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import Image from "next/image";
-import { emit } from "process";
 import { useContext, useState } from "react";
 
 interface ProductDetailsProps {
