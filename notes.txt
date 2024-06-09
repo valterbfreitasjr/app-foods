@@ -53,6 +53,13 @@ DICA para organização:
             "plugins": ["prettier-plugin-tailwindcss"]
             }
 
+
+Sobre o LUCIDE REACT - Icon Library para aplicações React.
+
+    Install: npm install lucide-react
+
+
+
 Sobre Git-Hooks - Para garantir a padronização do projeto
     - Irá garantir que antes de realizar o commit, seja executado o Prettier e o EsLint,
     garantindo uma padronização do projeto.
@@ -159,6 +166,15 @@ Sobre 'NextAuth.js' - Lib para autenticação.
     OBS: Criamos a pasta _providers com o 'auth.tsx', esse é o Provider que irá garantir que 
     os {childrens} acessem as informações de estado do usuário.
         Então irei colocar no 'layout.tsx' o meu <AuthProveider/> envolvendo a aplicação toda.
+
+    ::
+    !!!!
+        :: Ao atualizar o Schema, é importante além da 'Migrate' também rodar o comando:
+        :: npx prisma generate    << Atenção!!
+    !!!!
+    ::
+
+
 
 
     
