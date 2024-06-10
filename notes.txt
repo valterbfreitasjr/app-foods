@@ -9,11 +9,14 @@ Sobre o Next Js - Em 'App' toda pasta que você criar dentro, por exemplo:
                   componente normalmente, já os 'Clients Components' precisam do 'use client'.
 
 Sobre o Prisma (ORM)
+
         Istalar: npm install prisma --save-dev
         Run: npx prisma init --datasource-provider postgresql
-        cmds:
-        npx prisma format --- Irá formatar os Schemas
-        npx prisma migrate dev --name init_database
+
+        Comandos:
+        :: npx prisma format --- Irá formatar os Schemas
+        :: npx prisma migrate dev --name init_database
+        :: npx prisma generate   --- Para atualizar os Schemas
 
         ** Caso utilize Docker, NÃO ESQUECER de colocar no '.env':
             -   # docker
@@ -27,6 +30,8 @@ Sobre o Prisma (ORM)
         ** CMD: npx prisma db seed       <<<<
 
       ** Necessário instalar o ts-node, através do comando: npx install -d ts-node
+
+      ** Verificar as tabelas com o comando: npx prisma studio
 
 Sobre o Shadcn-UI
      - Lib com components prontos
@@ -173,6 +178,35 @@ Sobre 'NextAuth.js' - Lib para autenticação.
         :: npx prisma generate    << Atenção!!
     !!!!
     ::
+
+    IMPORTANTE modificação na Interface do NextAuth para retorno do ID da Session, no exemplo implementado no 'callback' do 'api/auth/[...nextauth]/route.ts'
+        Código:
+            callbacks: {
+                async session({ session, user }) {
+                session.user = { ...session.user, id: user.id };
+            },
+
+        Necessário criar o arquivo 'next-auth.d.ts' na raíz do projeto, com o seguinte código:
+            import { DefaultSession } from "next-auth";
+
+            declare module "next-auth" {
+                interface Session {
+                    user: {
+                        id: string;
+                    } & DefaultSession["user"];
+                }
+            }
+
+        Então configurado no 'include' do arquivo 'tsconfig.json':
+            "include": [
+                "next-env.d.ts",
+                "**/*.ts",
+                "**/*.tsx",
+                ".next/types/**/*.ts",
+                "next-auth.d.ts"  <<<
+            ],
+
+
 
 
 

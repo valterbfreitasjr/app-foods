@@ -3,7 +3,16 @@
 - Prisma (ORM): Utilizado na criação das tabelas do nosso banco de dados, no caso utilizando o Postgres.
 
 - Libs:
-    . TailwindCSS
-    . Shadcn UI
+    . TailwindCSS - CSS inline de forma a padronizar o desenvolvimento;
+    . Shadcn UI - Components;
+    . Lucide React - Lib para ícones;
+    . Zod - Para validação dos Inputs à partir de Schemas;
 
 - Commits: Baseados nas regras do 'Convetional Commits'
+
+- Server Actions: Podemos chamar funções que são executadas do lado do server à partir
+de um 'client component', utilizando no início do arquivo a expressão 'use server'.
+    Exemplo: _actions/order.ts
+
+- Server Components: São os components por padrão no NextJS, não permitem a interação
+do usuário.

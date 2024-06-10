@@ -1,14 +1,52 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { CartContext } from "../_context/cart";
 import CartItem from "./cart-item";
 import { Card, CardContent } from "./ui/card";
 import { formatCurrency } from "../_helpers/price";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
+import { createOrder } from "../_actions/order";
+import { OrderStatus } from "@prisma/client";
+import { useSession } from "next-auth/react";
 
 const Cart = () => {
   const { products, subtotalPrice, totalDiscounts, totalPrice } =
     useContext(CartContext);
+  const { data } = useSession();
+  const [submitLoading, setSubmitLoading] = useState(false);
+
+  if (submitLoading) {
+    return <h1>Loading</h1>;
+  }
+
+  // 1:23
+
+  const handleFinishOrderClick = async () => {
+    setSubmitLoading(true);
+    try {
+      if (!data?.user) return;
+
+      const restaurant = products?.[0].restaurant;
+
+      await createOrder({
+        subtotalPrice,
+        totalDiscounts,
+        totalPrice,
+        deliveryFee: restaurant.deliveryFee,
+        deliveryTimeMinutes: restaurant.deliveryTimeMinutes,
+        restaurant: {
+          connect: { id: restaurant.id },
+        },
+        status: OrderStatus.CONFIRMED,
+        user: {
+          connect: { id: data?.user.id },
+        },
+      });
+      setSubmitLoading(false);
+    } catch (error) {
+      return error;
+    }
+  };
 
   return (
     <div className="flex h-full flex-col py-5">
@@ -62,7 +100,9 @@ const Cart = () => {
           </div>
 
           {/* Finalizar Pedido */}
-          <Button className="mt-6 w-full">Finalizar pedido</Button>
+          <Button className="mt-6 w-full" onClick={handleFinishOrderClick}>
+            Finalizar pedido
+          </Button>
         </>
       ) : (
         <h2 className="text-center font-medium">Não há produtos na sacola.</h2>
