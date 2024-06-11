@@ -5,25 +5,20 @@ import { Card, CardContent } from "./ui/card";
 import { formatCurrency } from "../_helpers/price";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
+import { Loader2 } from "lucide-react";
 import { createOrder } from "../_actions/order";
 import { OrderStatus } from "@prisma/client";
 import { useSession } from "next-auth/react";
 
 const Cart = () => {
-  const { products, subtotalPrice, totalDiscounts, totalPrice } =
+  const { products, subtotalPrice, totalDiscounts, totalPrice, clearCart } =
     useContext(CartContext);
   const { data } = useSession();
   const [submitLoading, setSubmitLoading] = useState(false);
 
-  if (submitLoading) {
-    return <h1>Loading</h1>;
-  }
-
-  // 1:23
-
   const handleFinishOrderClick = async () => {
-    setSubmitLoading(true);
     try {
+      setSubmitLoading(true);
       if (!data?.user) return;
 
       const restaurant = products?.[0].restaurant;
@@ -42,9 +37,12 @@ const Cart = () => {
           connect: { id: data?.user.id },
         },
       });
-      setSubmitLoading(false);
+      clearCart();
+      // 1:25
     } catch (error) {
-      return error;
+      console.log(error);
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
@@ -100,7 +98,12 @@ const Cart = () => {
           </div>
 
           {/* Finalizar Pedido */}
-          <Button className="mt-6 w-full" onClick={handleFinishOrderClick}>
+          <Button
+            className="mt-6 w-full"
+            onClick={handleFinishOrderClick}
+            disabled={submitLoading}
+          >
+            {submitLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Finalizar pedido
           </Button>
         </>
