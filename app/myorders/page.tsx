@@ -3,15 +3,24 @@ import { authOptions } from "../_lib/auth";
 import { db } from "../_lib/prisma";
 import { redirect } from "next/navigation";
 import Header from "../_components/header";
+import OrderItem from "./_components/ordem-item";
 
 const MyOrderPage = async () => {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user) {
-    return redirect("/");
-  }
+  // if (!session?.user) {
+  //   return redirect("/");
+  // }
 
-  const orders = await db.order.findMany({});
+  const orders = await db.order.findMany({
+    where: {
+      userId: session?.user.id,
+    },
+    include: {
+      restaurant: true,
+      products: true,
+    },
+  });
 
   return (
     <>
@@ -22,7 +31,7 @@ const MyOrderPage = async () => {
 
         <div>
           {orders.map((order) => (
-            <p key={order.id}>{order.id}</p>
+            <OrderItem key={order.id}></OrderItem>
           ))}
         </div>
       </div>
