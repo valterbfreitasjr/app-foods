@@ -1,4 +1,4 @@
-import { use, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { CartContext } from "../_context/cart";
 import CartItem from "./cart-item";
 import { Card, CardContent } from "./ui/card";
@@ -14,7 +14,6 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -50,6 +49,14 @@ const Cart = () => {
         status: OrderStatus.CONFIRMED,
         user: {
           connect: { id: data?.user.id },
+        },
+        orderProducts: {
+          createMany: {
+            data: products.map((product) => ({
+              productId: product.id,
+              quantity: product.quantity,
+            })),
+          },
         },
       });
       clearCart();

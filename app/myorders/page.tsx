@@ -8,9 +8,9 @@ import OrderItem from "./_components/ordem-item";
 const MyOrderPage = async () => {
   const session = await getServerSession(authOptions);
 
-  // if (!session?.user) {
-  //   return redirect("/");
-  // }
+  if (!session?.user) {
+    return redirect("/");
+  }
 
   const orders = await db.order.findMany({
     where: {
@@ -18,7 +18,11 @@ const MyOrderPage = async () => {
     },
     include: {
       restaurant: true,
-      products: true,
+      orderProducts: {
+        include: {
+          product: true,
+        },
+      },
     },
   });
 
@@ -27,11 +31,11 @@ const MyOrderPage = async () => {
       <Header />
 
       <div className="px-5 py-6">
-        <h2 className="font-semibold">Meus pedidos</h2>
+        <h2 className="pb-4 font-semibold">Meus pedidos</h2>
 
-        <div>
+        <div className="space-y-3">
           {orders.map((order) => (
-            <OrderItem key={order.id}></OrderItem>
+            <OrderItem key={order.id} order={order} />
           ))}
         </div>
       </div>
