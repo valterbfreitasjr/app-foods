@@ -6,6 +6,8 @@ import { Card, CardContent } from "@/app/_components/ui/card";
 import { Separator } from "@/app/_components/ui/separator";
 import { OrderStatus, Prisma } from "@prisma/client";
 import { ChevronRightIcon } from "lucide-react";
+import { formatCurrency } from "@/app/_helpers/price";
+import Link from "next/link";
 
 interface OrdemItemProps {
   order: Prisma.OrderGetPayload<{
@@ -39,12 +41,14 @@ const getOrderStatusLabel = (status: OrderStatus) => {
 const OrderItem = ({ order }: OrdemItemProps) => {
   return (
     <Card className="space-y-3">
-      <CardContent className="space-y-3 p-5">
-        <div className="w-fit rounded-full bg-[#eeeeee] px-2 py-1 text-center text-muted-foreground">
+      <CardContent className="space-y-2 p-5">
+        <div
+          className={`w-fit rounded-full bg-[#eeeeee] px-2 py-1 text-center text-muted-foreground ${order.status !== "COMPLETED" && "bg-green-500 text-white"}`}
+        >
           <span className="block text-xs font-semibold">{order.status}</span>
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pt-2">
           <div className="flex items-center gap-2">
             <Avatar className="h-6 w-6">
               <AvatarImage src={order?.restaurant.imageUrl} />
@@ -55,8 +59,10 @@ const OrderItem = ({ order }: OrdemItemProps) => {
             </span>
           </div>
 
-          <Button variant="ghost" size="icon" className="h-6 w-6">
-            <ChevronRightIcon />
+          <Button variant="ghost" size="icon" className="h-6 w-6" asChild>
+            <Link href={`/restaurants/${order.restaurantId}`}>
+              <ChevronRightIcon />
+            </Link>
           </Button>
         </div>
 
@@ -64,13 +70,33 @@ const OrderItem = ({ order }: OrdemItemProps) => {
           <Separator />
         </div>
 
-        <div>
+        <div className="space-y-2">
           {order.orderProducts.map((p) => (
-            <div key={p.id} className="flex justify-between">
-              <h2>{p.product.name}</h2>
-              <span>{p.quantity}</span>
+            <div key={p.id} className="flex items-center gap-2">
+              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground">
+                <span className="block text-xs text-white">{p.quantity}</span>
+              </div>
+              <Link href={`/products/${p.product.id}`}>
+                <span>{p.product.name}</span>
+              </Link>
             </div>
           ))}
+        </div>
+
+        <div className="py-3">
+          <Separator />
+        </div>
+
+        <div className="itemx-center flex justify-between">
+          <p className="text-sm">{formatCurrency(Number(order.totalPrice))}</p>
+          <Button
+            variant="ghost"
+            className="text-primary"
+            size="sm"
+            disabled={order.status !== "COMPLETED"}
+          >
+            Adicionar à sacola
+          </Button>
         </div>
       </CardContent>
     </Card>
