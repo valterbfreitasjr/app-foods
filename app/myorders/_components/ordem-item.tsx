@@ -8,6 +8,9 @@ import { OrderStatus, Prisma } from "@prisma/client";
 import { ChevronRightIcon } from "lucide-react";
 import { formatCurrency } from "@/app/_helpers/price";
 import Link from "next/link";
+import { useContext } from "react";
+import { CartContext } from "@/app/_context/cart";
+import { useRouter } from "next/navigation";
 
 interface OrdemItemProps {
   order: Prisma.OrderGetPayload<{
@@ -39,6 +42,19 @@ const getOrderStatusLabel = (status: OrderStatus) => {
 };
 
 const OrderItem = ({ order }: OrdemItemProps) => {
+  const { addProductToCart } = useContext(CartContext);
+  const router = useRouter();
+
+  const handleReDoOrderClick = () => {
+    for (const orderProduct of order.orderProducts) {
+      addProductToCart({
+        product: { ...orderProduct.product, restaurant: order.restaurant },
+        quantity: orderProduct.quantity,
+      });
+    }
+    router.push(`/restaurants/${order.restaurantId}`);
+  };
+
   return (
     <Card className="space-y-3">
       <CardContent className="space-y-2 p-5">
@@ -54,9 +70,11 @@ const OrderItem = ({ order }: OrdemItemProps) => {
               <AvatarImage src={order?.restaurant.imageUrl} />
             </Avatar>
 
-            <span className="text-sm font-semibold">
-              {order.restaurant.name}
-            </span>
+            <Link href={`/products/${order.restaurantId}`}>
+              <span className="text-sm font-semibold">
+                {order.restaurant.name}
+              </span>
+            </Link>
           </div>
 
           <Button variant="ghost" size="icon" className="h-6 w-6" asChild>
@@ -94,8 +112,9 @@ const OrderItem = ({ order }: OrdemItemProps) => {
             className="text-primary"
             size="sm"
             disabled={order.status !== "COMPLETED"}
+            onClick={handleReDoOrderClick}
           >
-            Adicionar à sacola
+            Refazer pedido
           </Button>
         </div>
       </CardContent>
