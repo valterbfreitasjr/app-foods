@@ -26,7 +26,6 @@ interface OrdemItemProps {
 }
 
 const getOrderStatusLabel = (status: OrderStatus) => {
-  // {CONFIRMED, CANCELED, PREPARING, DELIVERING, COMPLETED}
   switch (status) {
     case "CONFIRMED":
       return "Confirmado";
