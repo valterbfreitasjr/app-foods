@@ -1,31 +1,56 @@
 "use client";
 
-import { Restaurant } from "@prisma/client";
+import { Restaurant, UserFavoriteRestaurants } from "@prisma/client";
 import { BikeIcon, HeartIcon, StarIcon, TimerIcon } from "lucide-react";
 import Image from "next/image";
 import { formatCurrency } from "../_helpers/price";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { cn } from "../_lib/utils";
-import { favoriteRestaurant } from "../_actions/restaurant";
+import {
+  favoriteRestaurant,
+  unfavoriteRestaurant,
+} from "../_actions/restaurant";
 import { toast } from "sonner";
+import { useEffect, useState } from "react";
 
 interface RestaurantItemProps {
   userId?: string;
   restaurant: Restaurant;
   className?: string;
+  userFavoritesRestaurants: UserFavoriteRestaurants[];
 }
 
 const RestaurantItem = ({
   userId,
   restaurant,
   className,
+  userFavoritesRestaurants,
 }: RestaurantItemProps) => {
+  const [isFavoritedRestaurant, setIsFavoritedRestaurant] = useState(false);
+
+  const handleToggleFavorite = async () => {
+    setIsFavoritedRestaurant(!isFavoritedRestaurant);
+  };
+
+  useEffect(() => {
+    setIsFavoritedRestaurant(
+      userFavoritesRestaurants.some(
+        (fav) => fav.restaurantId === restaurant.id,
+      ),
+    );
+  }, [userFavoritesRestaurants, restaurant.id]);
+
   const handleFavoriteClick = async () => {
     if (!userId) return;
     try {
+      if (isFavoritedRestaurant) {
+        await unfavoriteRestaurant(userId, restaurant.id);
+        toast.success("Restaurante removido dos favoritos.");
+        return;
+      }
+
       await favoriteRestaurant(userId, restaurant.id);
-      // toast.success(`${restaurant.name} favoritado com sucesso!`)
       toast.success(
         restaurant.name.endsWith("a")
           ? `${restaurant.name} favoritada com sucesso!`
@@ -60,7 +85,14 @@ const RestaurantItem = ({
               size="icon"
               onClick={handleFavoriteClick}
             >
-              <HeartIcon className={`fill-white`} size={16} />
+              <div onClick={handleToggleFavorite}>
+                <HeartIcon
+                  className={
+                    isFavoritedRestaurant ? "fill-red-500" : "fill-white"
+                  }
+                  size={16}
+                />
+              </div>
             </Button>
           )}
         </div>
