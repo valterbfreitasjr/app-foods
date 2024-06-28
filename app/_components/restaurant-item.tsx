@@ -13,20 +13,21 @@ import {
 } from "../_actions/restaurant";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 interface RestaurantItemProps {
-  userId?: string;
   restaurant: Restaurant;
   className?: string;
   userFavoritesRestaurants: UserFavoriteRestaurants[];
 }
 
 const RestaurantItem = ({
-  userId,
   restaurant,
   className,
   userFavoritesRestaurants,
 }: RestaurantItemProps) => {
+  const { data } = useSession();
+
   const [isFavoritedRestaurant, setIsFavoritedRestaurant] = useState(false);
 
   const handleToggleFavorite = async () => {
@@ -34,23 +35,24 @@ const RestaurantItem = ({
   };
 
   useEffect(() => {
-    setIsFavoritedRestaurant(
-      userFavoritesRestaurants.some(
+    const isFavorite = async () => {
+      const isFavorited = userFavoritesRestaurants.some(
         (fav) => fav.restaurantId === restaurant.id,
-      ),
-    );
-  }, [userFavoritesRestaurants, restaurant.id]);
+      );
+      setIsFavoritedRestaurant(isFavorited);
+    };
+  }, [userFavoritesRestaurants]);
 
   const handleFavoriteClick = async () => {
-    if (!userId) return;
+    if (!data?.user?.id) return;
     try {
       if (isFavoritedRestaurant) {
-        await unfavoriteRestaurant(userId, restaurant.id);
+        await unfavoriteRestaurant(data?.user?.id, restaurant.id);
         toast.success("Restaurante removido dos favoritos.");
         return;
       }
 
-      await favoriteRestaurant(userId, restaurant.id);
+      await favoriteRestaurant(data?.user?.id, restaurant.id);
       toast.success(
         restaurant.name.endsWith("a")
           ? `${restaurant.name} favoritada com sucesso!`
@@ -79,7 +81,7 @@ const RestaurantItem = ({
             <span className="text-xs font-semibold">5.0</span>
           </div>
 
-          {userId && (
+          {data?.user?.id && (
             <Button
               className="absolute right-2 top-2 h-7 w-7 rounded-full bg-gray-700"
               size="icon"

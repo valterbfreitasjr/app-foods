@@ -1,17 +1,18 @@
-import Header from "@/app/_components/header";
-import RestaurantItem from "@/app/_components/restaurant-item";
-import { authOptions } from "@/app/_lib/auth";
-import { db } from "@/app/_lib/prisma";
 import { getServerSession } from "next-auth";
+import Header from "../_components/header";
+import RestaurantItem from "../_components/restaurant-item";
+import { db } from "../_lib/prisma";
+import { authOptions } from "../_lib/auth";
 
-const RecommendedRestaurants = async () => {
+const MyFavoritesRestaurants = async () => {
   const session = await getServerSession(authOptions);
 
-  const restaurants = await db.restaurant.findMany({});
-
-  const userFavorites = await db.userFavoriteRestaurants.findMany({
+  const restaurants = await db.userFavoriteRestaurants.findMany({
     where: {
       userId: session?.user?.id,
+    },
+    include: {
+      restaurant: true,
     },
   });
 
@@ -25,10 +26,10 @@ const RecommendedRestaurants = async () => {
         <div className="flex w-full flex-col gap-6">
           {restaurants.map((restaurant) => (
             <RestaurantItem
-              restaurant={restaurant}
-              key={restaurant.id}
+              restaurant={restaurant.restaurant}
+              key={restaurant.restaurantId}
               className="min-w-full max-w-full"
-              userFavoritesRestaurants={userFavorites}
+              userFavoritesRestaurants={restaurants}
             />
           ))}
         </div>
@@ -37,4 +38,4 @@ const RecommendedRestaurants = async () => {
   );
 };
 
-export default RecommendedRestaurants;
+export default MyFavoritesRestaurants;

@@ -7,7 +7,7 @@ import { searchForRestaurants } from "../_actions/search";
 import Header from "@/app/_components/header";
 import RestaurantItem from "@/app/_components/restaurant-item";
 
-const Restaurants = () => {
+const Restaurants = async () => {
   const searchParams = useSearchParams();
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 
@@ -37,6 +37,7 @@ const Restaurants = () => {
               restaurant={restaurant}
               key={restaurant.id}
               className="min-w-full max-w-full"
+              userFavoritesRestaurants={[]}
             />
           ))}
         </div>
