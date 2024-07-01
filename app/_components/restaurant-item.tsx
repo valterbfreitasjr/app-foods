@@ -7,13 +7,9 @@ import { formatCurrency } from "../_helpers/price";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { cn } from "../_lib/utils";
-import {
-  favoriteRestaurant,
-  unfavoriteRestaurant,
-} from "../_actions/restaurant";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { toogleFavoritesRestaurants } from "../_actions/restaurant";
 
 interface RestaurantItemProps {
   restaurant: Restaurant;
@@ -27,44 +23,26 @@ const RestaurantItem = ({
   userFavoritesRestaurants,
 }: RestaurantItemProps) => {
   const { data } = useSession();
-
-  const [isFavoritedRestaurant, setIsFavoritedRestaurant] = useState(false);
-
-  const handleToggleFavorite = async () => {
-    setIsFavoritedRestaurant(!isFavoritedRestaurant);
-  };
-
-  useEffect(() => {
-    const isFavorite = async () => {
-      const isFavorited = userFavoritesRestaurants.some(
-        (fav) => fav.restaurantId === restaurant.id,
-      );
-      setIsFavoritedRestaurant(isFavorited);
-    };
-  }, [userFavoritesRestaurants]);
+  const isFavorite = userFavoritesRestaurants.some(
+    (fav) => fav.restaurantId === restaurant.id,
+  );
 
   const handleFavoriteClick = async () => {
-    if (!data?.user?.id) return;
+    if (!data?.user.id) return;
     try {
-      if (isFavoritedRestaurant) {
-        await unfavoriteRestaurant(data?.user?.id, restaurant.id);
-        toast.success("Restaurante removido dos favoritos.");
-        return;
-      }
-
-      await favoriteRestaurant(data?.user?.id, restaurant.id);
+      await toogleFavoritesRestaurants(data?.user.id, restaurant.id);
       toast.success(
-        restaurant.name.endsWith("a")
-          ? `${restaurant.name} favoritada com sucesso!`
-          : `${restaurant.name} favoritado com sucesso!`,
+        isFavorite
+          ? "Restaurante removido dos favoritos."
+          : "Restaurante favoritado.",
       );
     } catch (error) {
-      toast.error("Restaurante já favoritado.");
+      toast.error("Erro ao favoritar restaurante.");
     }
   };
 
   return (
-    <div className={cn("w-[150px] min-w-[150px]", className)}>
+    <div className={cn("w-[266px] min-w-[266px]", className)}>
       <div className="w-full space-y-3">
         <div className="relative h-[136px] w-full">
           <Link href={`/restaurants/${restaurant.id}`}>
@@ -81,20 +59,13 @@ const RestaurantItem = ({
             <span className="text-xs font-semibold">5.0</span>
           </div>
 
-          {data?.user?.id && (
+          {data?.user.id && (
             <Button
-              className="absolute right-2 top-2 h-7 w-7 rounded-full bg-gray-700"
+              className={`absolute right-2 top-2 h-7 w-7 rounded-full bg-gray-700 ${isFavorite && "bg-primary hover:bg-gray-700"}`}
               size="icon"
               onClick={handleFavoriteClick}
             >
-              <div onClick={handleToggleFavorite}>
-                <HeartIcon
-                  className={
-                    isFavoritedRestaurant ? "fill-red-500" : "fill-white"
-                  }
-                  size={16}
-                />
-              </div>
+              <HeartIcon className={"fill-white"} size={16} />
             </Button>
           )}
         </div>

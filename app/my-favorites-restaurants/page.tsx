@@ -3,11 +3,12 @@ import Header from "../_components/header";
 import RestaurantItem from "../_components/restaurant-item";
 import { db } from "../_lib/prisma";
 import { authOptions } from "../_lib/auth";
+import { notFound } from "next/navigation";
 
 const MyFavoritesRestaurants = async () => {
   const session = await getServerSession(authOptions);
 
-  const restaurants = await db.userFavoriteRestaurants.findMany({
+  const userFavoritesRestaurants = await db.userFavoriteRestaurants.findMany({
     where: {
       userId: session?.user?.id,
     },
@@ -15,6 +16,8 @@ const MyFavoritesRestaurants = async () => {
       restaurant: true,
     },
   });
+
+  if (!session) return notFound();
 
   return (
     <>
@@ -24,14 +27,18 @@ const MyFavoritesRestaurants = async () => {
           Restaurantes recomendados
         </h2>
         <div className="flex w-full flex-col gap-6">
-          {restaurants.map((restaurant) => (
-            <RestaurantItem
-              restaurant={restaurant.restaurant}
-              key={restaurant.restaurantId}
-              className="min-w-full max-w-full"
-              userFavoritesRestaurants={restaurants}
-            />
-          ))}
+          {userFavoritesRestaurants.length > 0 ? (
+            userFavoritesRestaurants.map(({ restaurant }) => (
+              <RestaurantItem
+                restaurant={restaurant}
+                key={restaurant.id}
+                className="min-w-full max-w-full"
+                userFavoritesRestaurants={userFavoritesRestaurants}
+              />
+            ))
+          ) : (
+            <h3>Você ainda não adicionou restaurants aos favoritos.</h3>
+          )}
         </div>
       </div>
     </>
