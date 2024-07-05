@@ -47,8 +47,11 @@ const OrderItem = ({ order }: OrdemItemProps) => {
   const handleReDoOrderClick = () => {
     for (const orderProduct of order.orderProducts) {
       addProductToCart({
-        product: { ...orderProduct.product, restaurant: order.restaurant },
-        quantity: orderProduct.quantity,
+        product: {
+          ...orderProduct.product,
+          restaurant: order.restaurant,
+          quantity: orderProduct.quantity,
+        },
       });
     }
     router.push(`/restaurants/${order.restaurantId}`);
