@@ -8,8 +8,8 @@ import { Toaster } from "./_components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "FSW Foods",
-  description: "Welcome to FSW Foods!",
+  title: "Welcome to devFood!",
+  description: "Welcome to devFood!",
 };
 
 export default function RootLayout({

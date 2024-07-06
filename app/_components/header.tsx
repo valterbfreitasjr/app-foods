@@ -33,7 +33,7 @@ const Header = () => {
 
   return (
     <div className="flex justify-between gap-3 px-5 pt-5">
-      <div className="relative h-[30px] w-[100px]">
+      <div className="relative h-[40x] w-[160px]">
         <Link href="/">
           <Image src="/logo.png" alt="eFood" fill />
         </Link>
@@ -121,10 +121,6 @@ const Header = () => {
                   <span className="block">Restaurantes favoritos</span>
                 </Link>
               </Button>
-
-              <Separator />
-
-              <h1>TBA</h1>
 
               <Separator />
 
