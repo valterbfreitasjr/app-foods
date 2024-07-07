@@ -32,7 +32,7 @@ const Header = () => {
   const handleSignOutClick = () => signOut();
 
   return (
-    <div className="flex justify-between gap-3 pt-5">
+    <div className="flex justify-between gap-3 pr-5 pt-5">
       <div className="relative h-[40x] w-[160px]">
         <Link href="/">
           <Image src="/logo.png" alt="eFood" fill />
